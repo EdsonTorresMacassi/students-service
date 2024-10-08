@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: no
+#    shm_size: 128mb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: students_db
+    ports:
+    - '5432:5432'
+    networks:
+    - tecylab
+
+  students-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: students-service:latest
+    container_name: students-service
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+    networks:
+      - tecylab
+
+networks:
+  tecylab:
+    name: tecylab
